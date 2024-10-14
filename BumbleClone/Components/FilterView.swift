@@ -10,7 +10,8 @@ import SwiftUI
 struct FilterView: View {
     
     var options: [String] = ["Everyone", "Trending"]
-    @State private var selection = "Everyone"
+    @Binding var selection: String
+    @Namespace private var filterNamespace
     
     var body: some View {
         HStack(alignment: .top, spacing: 32) {
@@ -24,6 +25,7 @@ struct FilterView: View {
                     if selection == option {
                         RoundedRectangle(cornerRadius: 2)
                             .frame(height: 1.5)
+                            .matchedGeometryEffect(id: "selection", in: filterNamespace)
                     }
                 }
                 .padding(.top)
@@ -35,10 +37,21 @@ struct FilterView: View {
                 }
             }
         }
+        .animation(.smooth, value: selection)
+    }
+}
+
+fileprivate struct FilterViewPreview: View {
+    
+    var options: [String] = ["Everyone", "Trending"]
+    @State private var selection = "Everyone"
+    
+    var body: some View {
+        FilterView(options: options, selection: $selection)
     }
 }
 
 #Preview {
-    FilterView()
+    FilterViewPreview()
         .padding()
 }
