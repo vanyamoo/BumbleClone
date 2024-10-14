@@ -15,6 +15,8 @@ struct HomeView: View {
             VStack {
                 header
                 
+                filterSection
+                
                 Spacer()
             }
             //.padding()
@@ -65,6 +67,9 @@ struct HomeView: View {
             .onTapGesture {
                 //
             }
+    }
+    private var filterSection: some View {
+        Circle()
     }
 }
 
