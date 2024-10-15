@@ -28,6 +28,48 @@ struct User: Codable, Identifiable {
         "Graduate Degree"
     }
     
+    var aboutMe: String {
+        "This is a sentence about me that will look good on my profile!"
+    }
+    
+    var basicInfo: [User.UserInfo] {
+        [
+            User.UserInfo(info: "176", iconName: "ruler", emoji: nil, iconType: "systemImage"),
+            User.UserInfo(info: "Graduate Degree", iconName: "graduationcap", emoji: nil, iconType: "systemImage"),
+            User.UserInfo(info: "Socially", iconName: "wineglass", emoji: nil, iconType: "systemImage"),
+            User.UserInfo(info: "Virgo", iconName: "moon.stars.fill", emoji: nil, iconType: "systemImage")
+        ]
+    }
+    
+    var interests: [User.UserInfo] {
+        [
+            User.UserInfo(info: "Running", iconName: nil, emoji: "👟", iconType: "emoji"),
+            User.UserInfo(info: "Gym", iconName: nil, emoji: "🏋️‍♂️", iconType: "emoji"),
+            User.UserInfo(info: "Music", iconName: nil, emoji: "🎧", iconType: "emoji"),
+            User.UserInfo(info: "Cooking", iconName: nil, emoji: "🥘", iconType: "emoji")
+        ]
+    }
+    
+    var images: [String] {
+        ["https://picsum.photos/500/500", "https://picsum.photos/600/600", "https://picsum.photos/700/700"]
+    }
+    var country: String { "🇺🇸" }
+    
+    var city: String {
+        "New York"
+    }
+    var state: String {
+        "NY"
+    }
+    var distance: Int { 10 }
+    
+    struct UserInfo: Hashable {
+        var info: String
+        var iconName: String?
+        var emoji: String?
+        var iconType: String
+    }
+    
     static var mock = User(
         id: 444,
         firstName: "Vanya",
@@ -44,4 +86,9 @@ struct User: Codable, Identifiable {
         //education: "MArch",
         //occupation: "Architect"
     )
+}
+
+enum Icon: String, CaseIterable {
+    case emoji
+    case systemImage
 }

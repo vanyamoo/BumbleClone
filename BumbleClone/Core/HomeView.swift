@@ -23,9 +23,8 @@ struct HomeView: View {
                     .background(
                         Divider(), alignment: .bottom)
                 
-                filterSection
-                
-                Spacer()
+                CardView()
+                    .padding()
             }
             //.padding()
         }
