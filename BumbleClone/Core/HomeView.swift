@@ -62,9 +62,11 @@ struct HomeView: View {
         ZStack {
             if !allUsers.isEmpty {
                 ForEach(Array(allUsers.enumerated()), id: \.offset) { (index, user) in
+                    // we show only current, previous and next profiles at any one time
                     let isPrevious = (selectedIndex - 1 == index)
                     let isCurrent = (selectedIndex == index)
                     let isNext = (selectedIndex + 1 == index)
+                    // we track whether user swiped left or right
                     if isPrevious || isCurrent || isNext {
                         let offsetValue = cardOffsets[user.id]
                         userProfileCell(user: user, index: index)
@@ -99,7 +101,7 @@ struct HomeView: View {
         )
             .withDragGesture(
                 .horizontal,
-//              minimumDistance: 10,
+                minimumDistance: 10,
                 resets: true,
                 rotationMultiplier: 1.05,
 //              scaleMultiplier: 0.9,
