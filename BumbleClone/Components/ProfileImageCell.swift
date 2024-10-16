@@ -10,36 +10,35 @@ import SwiftUI
 struct ProfileImageCell: View {
     
     var imageName = Constants.randomImage
-    var percentageRemaining = 0.75 //Double.random(in: 0...1)
+    var percentageRemaining = Double.random(in: 0...1)
     var hasNewMessage = true
     
     var body: some View {
         
-        
         ZStack {
             baseCircle
+            
             trimmedCircle
-                .foregroundStyle(.bumbleGray)
+            
             userProfileImage
             
             newMessageIndicator
         }
         .frame(width: Constants.BaseCircle.size, height: Constants.BaseCircle.size)
-        .foregroundStyle(.bumbleYellow)
         
-            
     }
     
     private var baseCircle: some View {
         Circle()
-            .stroke(lineWidth: Constants.BaseCircle.lineWidth)
+            .stroke(.bumbleGray, lineWidth: Constants.BaseCircle.lineWidth - 1)
     }
     
     private var trimmedCircle: some View {
         Circle()
-            .trim(from: 0, to: 1 - percentageRemaining)
+            .trim(from: 0, to: percentageRemaining)
             .rotation(Constants.TrimmedCircle.rotation)
-            .stroke(lineWidth: Constants.BaseCircle.lineWidth)
+            .stroke(.bumbleYellow, lineWidth: Constants.BaseCircle.lineWidth)
+            .scaleEffect(x: -1, y: 1, anchor: .center) // mirror
     }
     
     private var userProfileImage: some View {
@@ -50,13 +49,15 @@ struct ProfileImageCell: View {
     
     private var newMessageIndicator: some View {
         ZStack {
-            Circle()
-                .scaleEffect(Constants.NewMessageIndicator.scaleFactor * 1.3)
-                .foregroundStyle(.bumbleWhite)
-            Circle()
-                .scaleEffect(Constants.NewMessageIndicator.scaleFactor)
-                
+            if hasNewMessage {
+                Circle()
+                    .scaleEffect(Constants.NewMessageIndicator.scaleFactor * 1.3)
+                    .foregroundStyle(.bumbleWhite)
+                Circle()
+                    .scaleEffect(Constants.NewMessageIndicator.scaleFactor)
+            }
         }
+        .foregroundStyle(.bumbleYellow)
         .offset(Constants.NewMessageIndicator.offset)
     }
 }
@@ -83,5 +84,11 @@ extension Constants {
 }
 
 #Preview {
-    ProfileImageCell()
+    VStack {
+        ProfileImageCell()
+        ProfileImageCell(percentageRemaining: 1)
+        ProfileImageCell(percentageRemaining: 0)
+        ProfileImageCell(hasNewMessage: false)
+    }
+   
 }
