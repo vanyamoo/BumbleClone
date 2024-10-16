@@ -15,6 +15,7 @@ struct HomeView: View {
     @State private var allUsers: [User] = []
     @State private var selectedIndex: Int = 0
     @State private var cardOffsets: [Int:Bool] = [:] // UserId : (Direction is right == TRUE)
+    @State private var currentSwipeOffset: CGFloat = 0
     
     var body: some View {
         ZStack {
@@ -29,6 +30,7 @@ struct HomeView: View {
                 
 //                CardView()
                 ZStack {
+                    
                     if !allUsers.isEmpty {
                         ForEach(Array(allUsers.enumerated()), id: \.offset) { (index, user) in
                             
@@ -39,13 +41,46 @@ struct HomeView: View {
                                 let offsetValue = cardOffsets[user.id]
                                 
                                 userProfileCell(index: index)
-                                    .zIndex(Double(allUsers.count - index)) // stacks teh cards in reverse order
+                                    .zIndex(Double(allUsers.count - index)) // stacks the cards in reverse order
                                     .offset(x: offsetValue == nil ? 0 : offsetValue == true ? 900 : -900)
                             }
                         }
                     } else {
                         ProgressView()
                     }
+                    
+                    ZStack {
+                        Circle()
+                            .fill(.bumbleGray.opacity(0.4))
+                            .overlay(
+                                Image(systemName: "xmark")
+                                    .font(.title)
+                                    .fontWeight(.medium)
+                            )
+                            .frame(width: 60, height: 60)
+                            .scaleEffect(abs(currentSwipeOffset) > 100 ? 1.5 : 1.0)
+                            .offset(x: min(-currentSwipeOffset, 150))
+                            .offset(x: -100)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(.blue)
+                        
+                        Circle()
+                            .fill(.bumbleGray.opacity(0.4))
+                            .overlay(
+                                Image(systemName: "checkmark")
+                                    .font(.title)
+                                    .fontWeight(.medium)
+                            )
+                            .frame(width: 60, height: 60)
+                            .scaleEffect(abs(currentSwipeOffset) > 100 ? 1.5 : 1.0)
+                            .offset(x: max(-currentSwipeOffset, -150))
+                            .offset(x: 100)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .background(.blue)
+                    }
+                    .animation(.smooth, value: currentSwipeOffset)
+                    .zIndex(999999)
+                    
                 }
                 .frame(maxHeight: .infinity)
                 .animation(.smooth, value: cardOffsets)
@@ -82,7 +117,7 @@ struct HomeView: View {
     private func userProfileCell(index: Int) -> some View {
         Rectangle()
             .fill(index == 0 ? .red : .blue)
-            .overlay(Text("\(index)"))
+            .overlay(Text("\(currentSwipeOffset)"))
             .withDragGesture(
                 .horizontal,
 //                                        minimumDistance: <#T##CGFloat#>,
@@ -90,7 +125,7 @@ struct HomeView: View {
                 rotationMultiplier: 1.05,
 //                                        scaleMultiplier: 0.9,
                 onChanged: { dragOffset in
-                    //offset = dragOffset.width
+                    currentSwipeOffset = dragOffset.width
                 },
                 onEnded: { dragOffset in
                     if dragOffset.width < -50 {
