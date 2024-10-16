@@ -25,36 +25,9 @@ struct HomeView: View {
                 header
                 
                 FilterView(options: filters, selection: $selectedFilter)
-                    .background(
-                        Divider(), alignment: .bottom)
+                    .background(Divider(), alignment: .bottom)
                 
-//                CardView()
-                ZStack {
-                    
-                    if !allUsers.isEmpty {
-                        ForEach(Array(allUsers.enumerated()), id: \.offset) { (index, user) in
-                            
-                            let isPrevious = (selectedIndex - 1 == index)
-                            let isCurrent = (selectedIndex == index)
-                            let isNext = (selectedIndex + 1 == index)
-                            if isPrevious || isCurrent || isNext {
-                                let offsetValue = cardOffsets[user.id]
-                                
-                                userProfileCell(user: user, index: index)
-                                    .zIndex(Double(allUsers.count - index)) // stacks the cards in reverse order
-                                    .offset(x: offsetValue == nil ? 0 : offsetValue == true ? 900 : -900)
-                            }
-                        }
-                    } else {
-                        ProgressView()
-                    }
-                    
-                    overlaySwipingIndicators
-                        .zIndex(999999)
-                    
-                }
-                .frame(maxHeight: .infinity)
-                .animation(.smooth, value: cardOffsets)
+                profiles
             }
             .padding()
         }
@@ -85,6 +58,32 @@ struct HomeView: View {
         .foregroundStyle(.bumbleBlack)
     }
     
+    private var profiles: some View {
+        ZStack {
+            if !allUsers.isEmpty {
+                ForEach(Array(allUsers.enumerated()), id: \.offset) { (index, user) in
+                    let isPrevious = (selectedIndex - 1 == index)
+                    let isCurrent = (selectedIndex == index)
+                    let isNext = (selectedIndex + 1 == index)
+                    if isPrevious || isCurrent || isNext {
+                        let offsetValue = cardOffsets[user.id]
+                        userProfileCell(user: user, index: index)
+                            .zIndex(Double(allUsers.count - index)) // stacks the cards in reverse order
+                            .offset(x: offsetValue == nil ? 0 : offsetValue == true ? 900 : -900)
+                    }
+                }
+            } else {
+                ProgressView()
+            }
+            
+            overlaySwipingIndicators
+                .zIndex(999999)
+            
+        }
+        .frame(maxHeight: .infinity)
+        .animation(.smooth, value: cardOffsets)
+    }
+    
     private func userProfileCell(user: User, index: Int) -> some View {
         CardView(
             user: user,
@@ -100,7 +99,7 @@ struct HomeView: View {
         )
             .withDragGesture(
                 .horizontal,
-//              minimumDistance: <#T##CGFloat#>,
+//              minimumDistance: 10,
                 resets: true,
                 rotationMultiplier: 1.05,
 //              scaleMultiplier: 0.9,
