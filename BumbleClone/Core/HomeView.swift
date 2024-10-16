@@ -152,12 +152,12 @@ struct HomeView: View {
     
     private func getData() async {
         guard allUsers.isEmpty else { return }
-            do {
-                allUsers = try await DatabaseHelper().getUsers()
-            } catch {
-                print(error.localizedDescription)
-            }
+        do {
+            allUsers = try await DatabaseHelper().getUsers()
+        } catch {
+            print(error.localizedDescription)
         }
+    }
     
     private var overlaySwipingIndicators: some View {
         ZStack {

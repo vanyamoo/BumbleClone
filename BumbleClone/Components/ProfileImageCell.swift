@@ -35,10 +35,11 @@ struct ProfileImageCell: View {
     
     private var trimmedCircle: some View {
         Circle()
-            .trim(from: 0, to: percentageRemaining)
+            .trim(from: 1 - percentageRemaining, to: 1.0)
             .rotation(Constants.TrimmedCircle.rotation)
             .stroke(.bumbleYellow, lineWidth: Constants.BaseCircle.lineWidth)
-            .scaleEffect(x: -1, y: 1, anchor: .center) // mirror
+            //.trim(from: 0, to: percentageRemaining)
+            //.scaleEffect(x: -1, y: 1, anchor: .center) // mirror
     }
     
     private var userProfileImage: some View {
@@ -65,7 +66,7 @@ struct ProfileImageCell: View {
 extension Constants {
     struct BaseCircle {
         static let lineWidth: CGFloat = 4
-        static let size: CGFloat = 90
+        static let size: CGFloat = 75
     }
     
     struct TrimmedCircle {
@@ -85,6 +86,13 @@ extension Constants {
 
 #Preview {
     VStack {
+        ProfileImageCell()
+        ProfileImageCell(percentageRemaining: 1)
+        ProfileImageCell(percentageRemaining: 0)
+        ProfileImageCell(hasNewMessage: false)
+    }
+    Spacer()
+    HStack {
         ProfileImageCell()
         ProfileImageCell(percentageRemaining: 1)
         ProfileImageCell(percentageRemaining: 0)
