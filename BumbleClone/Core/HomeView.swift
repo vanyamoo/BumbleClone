@@ -40,7 +40,7 @@ struct HomeView: View {
                             if isPrevious || isCurrent || isNext {
                                 let offsetValue = cardOffsets[user.id]
                                 
-                                userProfileCell(index: index)
+                                userProfileCell(user: user, index: index)
                                     .zIndex(Double(allUsers.count - index)) // stacks the cards in reverse order
                                     .offset(x: offsetValue == nil ? 0 : offsetValue == true ? 900 : -900)
                             }
@@ -49,37 +49,8 @@ struct HomeView: View {
                         ProgressView()
                     }
                     
-                    ZStack {
-                        Circle()
-                            .fill(.bumbleGray.opacity(0.4))
-                            .overlay(
-                                Image(systemName: "xmark")
-                                    .font(.title)
-                                    .fontWeight(.medium)
-                            )
-                            .frame(width: 60, height: 60)
-                            .scaleEffect(abs(currentSwipeOffset) > 100 ? 1.5 : 1.0)
-                            .offset(x: min(-currentSwipeOffset, 150))
-                            .offset(x: -100)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(.blue)
-                        
-                        Circle()
-                            .fill(.bumbleGray.opacity(0.4))
-                            .overlay(
-                                Image(systemName: "checkmark")
-                                    .font(.title)
-                                    .fontWeight(.medium)
-                            )
-                            .frame(width: 60, height: 60)
-                            .scaleEffect(abs(currentSwipeOffset) > 100 ? 1.5 : 1.0)
-                            .offset(x: max(-currentSwipeOffset, -150))
-                            .offset(x: 100)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .background(.blue)
-                    }
-                    .animation(.smooth, value: currentSwipeOffset)
-                    .zIndex(999999)
+                    overlaySwipingIndicators
+                        .zIndex(999999)
                     
                 }
                 .frame(maxHeight: .infinity)
@@ -114,16 +85,25 @@ struct HomeView: View {
         .foregroundStyle(.bumbleBlack)
     }
     
-    private func userProfileCell(index: Int) -> some View {
-        Rectangle()
-            .fill(index == 0 ? .red : .blue)
-            .overlay(Text("\(currentSwipeOffset)"))
+    private func userProfileCell(user: User, index: Int) -> some View {
+        CardView(
+            user: user,
+            onSuperlikePressed: nil,
+            onXMarkPressed: {
+                userDidSelect(index: index, isLike: false)
+            },
+            onCheckMarkPressed: {
+                userDidSelect(index: index, isLike: true)
+            },
+            onSendAComplimentPressed: nil,
+            onHideAndReportPressed: nil
+        )
             .withDragGesture(
                 .horizontal,
-//                                        minimumDistance: <#T##CGFloat#>,
+//              minimumDistance: <#T##CGFloat#>,
                 resets: true,
                 rotationMultiplier: 1.05,
-//                                        scaleMultiplier: 0.9,
+//              scaleMultiplier: 0.9,
                 onChanged: { dragOffset in
                     currentSwipeOffset = dragOffset.width
                 },
@@ -177,6 +157,37 @@ struct HomeView: View {
                 print(error.localizedDescription)
             }
         }
+    
+    private var overlaySwipingIndicators: some View {
+        ZStack {
+            Circle()
+                .fill(.bumbleGray.opacity(0.4))
+                .overlay(
+                    Image(systemName: "xmark")
+                        .font(.title)
+                        .fontWeight(.medium)
+                )
+                .frame(width: 60, height: 60)
+                .scaleEffect(abs(currentSwipeOffset) > 100 ? 1.5 : 1.0)
+                .offset(x: min(-currentSwipeOffset, 150))
+                .offset(x: -100)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Circle()
+                .fill(.bumbleGray.opacity(0.4))
+                .overlay(
+                    Image(systemName: "checkmark")
+                        .font(.title)
+                        .fontWeight(.medium)
+                )
+                .frame(width: 60, height: 60)
+                .scaleEffect(abs(currentSwipeOffset) > 100 ? 1.5 : 1.0)
+                .offset(x: max(-currentSwipeOffset, -150))
+                .offset(x: 100)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+        .animation(.smooth, value: currentSwipeOffset)
+    }
 }
 
 #Preview {

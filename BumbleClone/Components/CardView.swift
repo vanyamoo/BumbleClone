@@ -15,7 +15,7 @@ struct CardView: View {
     var onXMarkPressed: (() -> Void)?
     var onCheckMarkPressed: (() -> Void)?
     var onSendAComplimentPressed: (() -> Void)?
-    var onHideAndreportPressed: (() -> Void)?
+    var onHideAndReportPressed: (() -> Void)?
     
     @State private var cardFrame: CGRect = .zero
     
@@ -200,7 +200,7 @@ struct CardView: View {
             .foregroundStyle(.bumbleGray)
             .padding()
             .onTapGesture {
-                onHideAndreportPressed?()
+                onHideAndReportPressed?()
             }
     }
     
