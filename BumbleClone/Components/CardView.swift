@@ -106,7 +106,7 @@ struct CardView: View {
             colors: [
                 .bumbleBlack.opacity(0.6),
                 .bumbleBlack.opacity(0.6),
-                .bumbleBlack.opacity(0.1)
+                .bumbleBlack.opacity(0.05)
             ],
             startPoint: .bottom,
             endPoint: .top

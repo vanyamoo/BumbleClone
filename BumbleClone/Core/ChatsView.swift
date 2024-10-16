@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftfulRouting
 
 struct ChatsView: View {
     
     @State private var allUsers: [User] = []
+    @Environment(\.router) var router
     
     var body: some View {
         ZStack {
@@ -112,7 +114,7 @@ struct ChatsView: View {
         HStack(spacing: 0) {
             Image(systemName: "line.horizontal.3")
                 .onTapGesture {
-                    //
+                    router.dismissScreen()
                 }
             Spacer()
             Image(systemName: "magnifyingglass")

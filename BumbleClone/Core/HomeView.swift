@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftfulUI
+import SwiftfulRouting
 
 struct HomeView: View {
     
@@ -16,6 +17,7 @@ struct HomeView: View {
     @State private var selectedIndex: Int = 0
     @State private var cardOffsets: [Int:Bool] = [:] // UserId : (Direction is right == TRUE)
     @State private var currentSwipeOffset: CGFloat = 0
+    @Environment(\.router) var router
     
     var body: some View {
         ZStack {
@@ -36,6 +38,12 @@ struct HomeView: View {
         }
         .toolbarVisibility(.hidden, for: .navigationBar)
     }
+    
+    private func goToChatsView() {
+            router.showScreen(.push) { _ in
+                ChatsView()
+            }
+        }
     
     private func userDidSelect(index: Int, isLike: Bool) {
         let user = allUsers[index]
@@ -124,14 +132,14 @@ struct HomeView: View {
                 .padding()
                 .contentShape(.interaction, .rect)
                 .onTapGesture {
-                    //
+                    //router.dismissScreen()
                 }
             
             Image(systemName: "arrow.uturn.left")
                 .padding()
                 .contentShape(.interaction, .rect)
                 .onTapGesture {
-                    //
+                    //router.dismissScreen()
                 }
         }
     }
@@ -146,7 +154,7 @@ struct HomeView: View {
             .padding()
             .contentShape(.interaction, .rect)
             .onTapGesture {
-                //
+                goToChatsView()
             }
     }
     
@@ -192,5 +200,7 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    RouterView { _ in
+        HomeView()
+    }
 }
